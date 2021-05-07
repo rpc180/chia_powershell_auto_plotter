@@ -48,7 +48,7 @@ To determine running instances the script examines the current TEMP drive plotti
 
 If the script passes the running instance measurement it then checks the last created log file in the Chia Plotter folder defined for that computer.  If it finds the string "Computing table 3" it means the most recent generated instance has gotten to Table 3 of Phase 1 (usually about an hour or so after it started).  Since CPU contention is most experienced during Phase 1, this provides some stepping between instances being generated too quickly.  If the string is not found in the latest log file the script ends.
 
-If the script passes the Phase progress measurement, it then checks the storage available in both the TEMP and the FINAL drives.  Currently they are set for 200GB as a hard limit for TEMP and 300GB as a hard limit for FINAL.  If either fall below these numbers the script ends.
+If the script passes the Phase progress measurement, it then checks the storage available in both the TEMP and the FINAL drives.  Currently they are set for 300GB as a hard limit for TEMP and 200GB as a hard limit for FINAL.  If either fall below these numbers the script ends.
 
 If the script passes the storage checks it then attempts to generate a new running instance using the public keys provided, default values, and the TEMP and FINAL paths as its targets.
 
