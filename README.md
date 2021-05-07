@@ -12,7 +12,7 @@ $pkey_Farmer = "public farm key"
 $pkey_Pool = "public pool key"
 
 Switch ( $env:COMPUTERNAME ) {
-    "Computer1" { 
+    "DEN-PC" { 
         $Max_Instances = 3
         $Drive_Temp = "F:"
         $Drive_Final = "E:"
@@ -40,6 +40,17 @@ You can then add it as a Scheduled Task to run on an hourly schedule.
  - Add additional flags "-noprofile -File C:\SaveLocation\Create_Plots.ps1" (without quotes)
 
 This will also create a run log file called "Create_Plots.log" in the Chia plotting directory by default but can be configured in the computername block as desired.
+
+## Approach
+The scripts first retrieves a computer value from the built-in $env:hostname windows varilable.  It then assigns values for the rest of the script to use from the block of characteristics under the hostname.  For instance, DEN-PC has a 4-core, 4-thread CPU, a SSD installed as Drive F: and a 3TB HDD installed as Drive E: and 16GB of RAM.  As it is a 4-thread CPU, maximum simulatenous instances is probably 3.
+
+To determine running instances the script examines the current TEMP drive plotting folders.  It checks each folder for number of files inside, if there are any files present it counts as a running instance and continues to the next subfolder, incrementing the count if it finds more files contained in that subfolder.  If the total number of instances exceeds the maximum the script ends.
+
+If the script passes the running instance measurement it then checks the last created log file in the Chia Plotter folder defined for that computer.  If it finds the string "Computing table 3" it means the most recent generated instance has gotten to Table 3 of Phase 1 (usually about an hour or so after it started).  Since CPU contention is most experienced during Phase 1, this provides some stepping between instances being generated too quickly.  If the string is not found in the latest log file the script ends.
+
+If the script passes the Phase progress measurement, it then checks the storage available in both the TEMP and the FINAL drives.  Currently they are set for 200GB as a hard limit for TEMP and 300GB as a hard limit for FINAL.  If either fall below these numbers the script ends.
+
+If the script passes the storage checks it then attempts to generate a new running instance using the public keys provided, default values, and the TEMP and FINAL paths as its targets.
 
 #### Example Run:
 ```sh
